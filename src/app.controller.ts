@@ -25,11 +25,14 @@ export class AppController {
     Logger.log('mint info', mintInfo);
     const imxClient = new ImmutableX(Config.SANDBOX);
 
+    const copy = { ...mintInfo };
+    delete copy.userAddress;
+
     const mintParams: UnsignedMintRequest = {
       contract_address: '0x685576c3a592088ea9ca528b342d05087a64b6e7',
       users: [
         {
-          tokens: [{ id: tokenId, blueprint: tokenId }],
+          tokens: [{ id: tokenId, blueprint: JSON.stringify(copy) }],
           user: userAddress,
         },
       ],
