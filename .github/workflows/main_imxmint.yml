@@ -52,7 +52,7 @@ jobs:
           id: deploy-to-webapp
           uses: azure/webapps-deploy@v2
           with:
-            app-name: 'sampleapp'
+            app-name: 'ImxMint'
             slot-name: 'Production'
             publish-profile:  ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_24193D52165940DF92D2AC889B51E4D8 }}
             package: nest.zip
