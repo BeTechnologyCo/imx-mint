@@ -13,8 +13,7 @@ export class AppController {
   getHello(): string {
     Logger.log("hello");
 
-    return "toto";
-    //Òreturn this.appService.getHello();
+    return this.appService.getHello();
   }
 
   @Post('mint')
