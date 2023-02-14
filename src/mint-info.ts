@@ -4,3 +4,8 @@ export interface MintInfo {
     monsterId: string;
     name: string;
 }
+
+export interface TransferInfo {
+    receiverAddress: string;
+    tokenId: string;
+}

@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Logger, Param, Post, Query, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ImmutableX, Config, UnsignedMintRequest } from '@imtbl/core-sdk';
+import { ImmutableX, Config, UnsignedMintRequest, UnsignedTransferRequest } from '@imtbl/core-sdk';
 import { generateWalletConnection } from './libs/walletConnection';
-import { MintInfo } from './mint-info';
+import { MintInfo, TransferInfo } from './mint-info';
 import { log } from 'node:console';
 
 @Controller('api')
@@ -41,7 +41,37 @@ export class AppController {
     let result: any;
 
     try {
-      const mintResponse = await imxClient.mint(walletConnection, mintParams);
+      const mintResponse = await imxClient.mint(
+        walletConnection.ethSigner,
+        mintParams,
+      );
+      result = mintResponse;
+      console.log('mintResponse', JSON.stringify(mintResponse));
+    } catch (error) {
+      console.error(error);
+    }
+    return result;
+  }
+
+  @Post('transfer')
+  async transfer(@Body() transferInfo: TransferInfo): Promise<any> {
+    const walletConnection = await generateWalletConnection('goerli');
+
+    const imxClient = new ImmutableX(Config.SANDBOX);
+
+    const transferParams: UnsignedTransferRequest = {
+      tokenAddress: '0x685576c3a592088ea9ca528b342d05087a64b6e7',
+      tokenId: transferInfo.tokenId,
+      receiver: transferInfo.receiverAddress,
+      type: 'ERC721'
+    };
+
+    let result: any;
+    try {
+      const mintResponse = await imxClient.transfer(
+        walletConnection,
+        transferParams,
+      );
       result = mintResponse;
       console.log('mintResponse', JSON.stringify(mintResponse));
     } catch (error) {

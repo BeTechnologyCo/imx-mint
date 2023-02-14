@@ -1,6 +1,6 @@
 import { AlchemyProvider } from '@ethersproject/providers';
 import { Wallet } from '@ethersproject/wallet';
-import { createStarkSigner, EthSigner, WalletConnection } from '@imtbl/core-sdk';
+import { createStarkSigner, EthSigner, generateStarkPrivateKey, WalletConnection } from '@imtbl/core-sdk';
 import { requireEnvironmentVariable } from './utils';
 
 /**
@@ -8,10 +8,12 @@ import { requireEnvironmentVariable } from './utils';
  */
 export const generateWalletConnection = async (
   ethNetwork: string,
-): Promise<EthSigner> => {
+): Promise<WalletConnection> => {
   const userPrivateKey = requireEnvironmentVariable('PRIVATE_KEY');
   //const userStarkKey = requireEnvironmentVariable('STARK_PRIVATE_KEY');
   const alchemyKey = requireEnvironmentVariable('ALCHEMY_API_KEY');
+  const starkPrivateKey = generateStarkPrivateKey(); // Or retrieve previously generated key
+  const starkSigner = createStarkSigner(starkPrivateKey);
 
   // connect provider
   const provider = new AlchemyProvider(ethNetwork, alchemyKey);
@@ -22,5 +24,8 @@ export const generateWalletConnection = async (
   // L2 credentials
   //const starkSigner = createStarkSigner(userStarkKey);
 
-  return ethSigner;
+  return {
+    ethSigner,
+    starkSigner,
+  };
 };
